@@ -1,0 +1,268 @@
+syntax = "proto3";
+
+package appointy.accouting.v1;
+
+option go_package = "pb";
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/empty.proto";
+import "validate/chaku.proto";
+
+service quickbookServer{
+    //Create account from charts of account
+    //rpc CreateAccount(CreateAccountRequest) returns (Account){}
+
+    //Employee Actions
+    rpc CreateEmployee (CreateEmployeeRequest) returns (Employee) {}
+    rpc DeleteEmployee(DeleteEmployeeRequest) returns (google.protobuf.Empty) {}
+
+    //Timeactivity Actions
+    rpc CreateBusinessHour(CreateBusinessHourRequest) returns (BusinessHour) {}
+    rpc DeleteBusinessHours(DeleteBusinessHourRequest) returns (google.protobuf.Empty) {}
+
+    //RPC for prepaid appointment.
+    rpc CreatePrepaidAppointment(CreatePrepaidAppointmentRequest) returns (PrepaidAppointment){}
+    rpc CancelNRefPrepaidAppointment(CancelNRefPrepaidAppointmentRequest) returns (PrepaidAppointment){}
+
+    //RPC for customer account.
+    rpc CreateCustomerAccount(CreateCustomerRequest) returns (Customer){}
+    rpc RemoveCustomerAccount(RemoveCustomerRequest) returns (google.protobuf.Empty){}
+    rpc UpdateCustomerAccount(UpdateCustomerRequest) returns (Customer){}
+
+    //RPCs for Addon/Product inventory
+    rpc CreateInventory(CreateInventoryRequest) returns (Inventory){}
+} 
+
+
+message AccoutingEmployeeLink{
+    option (chaku.root) = true;
+    option (chaku.prefix) = "ael";
+    
+    string id =1;
+    string appointyId = 2;
+    string externalId =3;
+    AccountingIntegrationType AppType =4;
+    map<string, string> metadata = 5;
+}
+
+//message CreateAccountRequest{
+//   string companyId = 1;
+//   Account account = 2;
+//   AccountingIntegrationType appType =3;
+//}
+
+message CreateEmployeeRequest{
+    string companyId  = 1;
+    Employee employee = 2;
+    AccountingIntegrationType appType =3;
+}
+
+message DeleteEmployeeRequest{
+    string companyId =1;
+    string appointyEmployeeId = 2;
+    AccountingIntegrationType appType =3;
+}
+
+message CreateBusinessHourRequest{
+    string companyId =1;
+    BusinessHour businessHour =2;
+    AccountingIntegrationType appType =3;
+    
+}
+
+message DeleteBusinessHourRequest{
+    string companyId =1;
+    string appointyEmployeeId = 2;
+    AccountingIntegrationType appType =3;
+}
+
+message CreatePrepaidAppointmentRequest{
+   string companyId = 1;
+   PrepaidAppointment prepaidAppointment = 2;
+}
+
+message CancelNRefPrepaidAppointmentRequest{
+     string companyId = 1;
+     PrepaidAppointment prepaidAppointment = 2;
+}
+
+message CreateCustomerRequest{
+    string companyId  = 1;
+    Customer customer = 2;
+    AccountingIntegrationType appType =3;
+}
+
+message RemoveCustomerRequest{
+    string companyId  = 1;
+    Customer customer = 2;
+}
+
+message UpdateCustomerRequest{
+    string companyId  = 1;
+    Customer customer = 2;   
+}
+
+message CreateInventoryRequest{
+  string CompanyID = 1;
+  Inventory inventory = 2;
+  AccountingIntegrationType appType =3;
+}
+
+//message Account{
+//Unique indentifier for this object 
+//   string Id = 1;
+//Name of the account
+//  string Name = 2;
+//classification of the account.
+//  AccountType AccType = 3;
+//
+//}
+
+message Employee {
+    // Id of employee
+    string id = 1;
+    // appointy id 
+    string appointyId = 2;
+    // First Name of the employee
+    string firstName = 3;
+    // Last Name of the employee
+    string lastName = 4;
+    // Unique Email of the employee
+    string email = 5;
+    // Url of the profile image
+    string profileImage =6;
+    // Gender of the employee
+    Gender gender = 7;
+    // employee Number of the employee
+    string employeeNumber = 8;
+    // phone Number of the employee
+    string phoneNumber = 9;
+    // department of employee
+    string department = 10;
+    // designation of the employee
+    string designation = 11;
+    // Additional data of employee
+    map<string, string> metadata = 12;
+    // Date on which employee was hired
+    .google.protobuf.Timestamp hireDate = 13;
+}
+
+
+message BusinessHour{
+  
+    string appointyEmployeeId = 1;
+
+    string employeeId =2;
+    
+    //time at which work starts 
+    .google.protobuf.Timestamp createDate = 3;
+
+    //name of staff.
+    string Name = 4;
+    //description
+    string Description = 5;
+    //total time of work
+    string TotalTime = 6;
+}
+
+
+message PrepaidAppointment{
+    //Id of account or type of account
+    string id = 1;
+    //appointy Id
+    string appointyId = 2;
+    //advanced paid or not 
+    bool PaymentStatus = 3;
+    //Account ID
+    string DepositeAccId = 4;
+    //CustomerId who made the payment
+    string CustomerId = 5;
+    // Total transaction amount 
+    string TotalAmount = 6;
+    // Reference of the currency
+    string CurrencyRef = 7;
+    //Customer status for transaction
+    string CustomerStatus = 8;
+    // Synctoken for granting only one user at a time.
+    string SyncToken = 9;
+    //Date on which payment occured.
+     .google.protobuf.Timestamp createDate = 10;
+    // Additional data of account
+    map<string, string> metadata = 11;
+}
+
+message Customer{
+    // Id of customer
+    string id = 1;
+    //appointy Id correlation
+    string AppointyId = 2;
+    // First Name of the customer
+    string firstName = 3;
+    // Last Name of the customer
+    string lastName = 4;
+    // Unique Email of the customer
+    string email = 5;
+    // Gender of the customer
+    Gender gender = 6;
+    // phone Number of the customer
+    string phoneNumber = 7;
+    // Account Number of customer
+    string acctnum = 8;
+    // Type of account the customer have
+    string accttype = 9;
+    //Soft deleting. 
+    string VisState =10;
+    //name of organization customer is associated
+    string CustomerOrg = 11;
+    // Date on which account of customer created
+    .google.protobuf.Timestamp createDate = 12;
+    // Additional data of customer
+    map<string, string> metadata = 13;
+}
+
+message Inventory{
+    //object indentifier
+    string Id = 1;
+    //inventory id.
+    string InventoryId = 2;
+    //name of the Item
+    string Name = 3;
+    //cost of Item
+    string ItemCost = 4;
+    //purchase detail
+    string PurchaseDetail = 5;
+    //Item description
+    string ItemDesc = 6;
+    //Item deleted or remain in the list.
+    string ItemVisState = 7;
+    // Synctoken for granting only one user at a time.
+    string SyncToken = 8;
+    //Tax id for item.
+    string TxnId = 9;
+    //Date on which date on which item Purchased.
+    .google.protobuf.Timestamp PurchaseDate = 10;
+    // Additional data of item.
+    map<string, string> metadata = 11;
+ 
+}
+
+enum Gender {
+    UNSPECIFIED = 0;
+    MALE = 1;
+    FEMALE = 2;
+}
+
+enum AccountingIntegrationType{
+    UNDEFINED = 0;
+    QUICKBOOKS =1;
+    XERO=2;
+    FRESHBOOK=3;
+}
+
+enum AccountType{
+    ASSET = 0;
+    EQUITY = 1;
+    EXPENSE = 2;
+    LIABILITY =3;
+    REVENUE = 4;
+}
