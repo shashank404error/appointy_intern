@@ -9,8 +9,6 @@ import "google/protobuf/empty.proto";
 import "validate/chaku.proto";
 
 service quickbookServer{
-    //Create account from charts of account
-    //rpc CreateAccount(CreateAccountRequest) returns (Account){}
 
     //Employee Actions
     rpc CreateEmployee (CreateEmployeeRequest) returns (Employee) {}
@@ -20,18 +18,43 @@ service quickbookServer{
     rpc CreateBusinessHour(CreateBusinessHourRequest) returns (BusinessHour) {}
     rpc DeleteBusinessHours(DeleteBusinessHourRequest) returns (google.protobuf.Empty) {}
 
+    //Staff Appointments
+    rpc CreateStaffAppointments(CreateStaffAppointmentRequest) returns (PrepaidAppointment) {}
+
     //RPC for prepaid appointment.
     rpc CreatePrepaidAppointment(CreatePrepaidAppointmentRequest) returns (PrepaidAppointment){}
     rpc CancelNRefPrepaidAppointment(CancelNRefPrepaidAppointmentRequest) returns (PrepaidAppointment){}
+    rpc UpdatePrepaidAppointment(UpdatePrepaidAppointmentRequest) returns (PrepaidAppointment){}
+    rpc NoShowPrepaidAppointment(NoShowPrepaidAppointmentRequest) returns (PrepaidAppointment){}
 
-    //RPC for customer account.
+    //RPC for partpaid appointment.
+    rpc CreatePartpaidAppointment(CreatePartpaidAppointmentRequest) returns (PartpaidAppointment){}
+    rpc CancelNRefPartpaidAppointment(CancelNRefPartpaidAppointmentRequest) returns (PartpaidAppointment){}
+    rpc UpdatePartpaidAppointment(UpdatePartpaidAppointmentRequest) returns (PartpaidAppointment){}
+    rpc NoShowPartpaidAppointment(NoShowPartpaidAppointmentRequest) returns (PartpaidAppointment){}
+
+    //RPCs for gift certificates
+    rpc SellGiftCertificate(SellGiftCertificateRequest) returns (PrepaidAppointment){}
+    rpc RedeemGiftCertificate(RedeemGiftCertificateRequest) returns (PrepaidAppointment){}
+    rpc CancelGiftCertificate(CancelGiftCertificateRequest) returns (PrepaidAppointment){}
+    rpc ExpireGiftCertificate(ExpireGiftCertificateRequest) returns (PrepaidAppointment){}
+    
+    
+    //create customers 
     rpc CreateCustomerAccount(CreateCustomerRequest) returns (Customer){}
-    rpc RemoveCustomerAccount(RemoveCustomerRequest) returns (google.protobuf.Empty){}
-    rpc UpdateCustomerAccount(UpdateCustomerRequest) returns (Customer){}
 
-    //RPCs for Addon/Product inventory
-    rpc CreateInventory(CreateInventoryRequest) returns (Inventory){}
+    //RPCs for manual payment
+    rpc CreateManualPayment(CreateManualPaymentRequest) returns (PartpaidAppointment){}
+    rpc RemoveManualPayment(RemoveManualPaymentRequest) returns (PartpaidAppointment){}
+    rpc UpdateManualPayment(UpdateManualPaymentRequest) returns (PartpaidAppointment){}
+
+    //RPCs for discount coupon enabled sale
+    rpc CreateDiscountCouponEnabledSale(CreateDiscountCouponEnabledSaleRequest) returns (PartpaidAppointment){}
+    rpc RemoveDiscountCouponEnabledSale(RemoveDiscountCouponEnabledSaleRequest) returns (PartpaidAppointment){}
+    rpc UpdateDiscountCouponEnabledSale(UpdateDiscountCouponEnabledSaleRequest) returns (PartpaidAppointment){}
+
 } 
+ 
 
 
 message AccoutingEmployeeLink{
@@ -45,12 +68,9 @@ message AccoutingEmployeeLink{
     map<string, string> metadata = 5;
 }
 
-//message CreateAccountRequest{
-//   string companyId = 1;
-//   Account account = 2;
-//   AccountingIntegrationType appType =3;
-//}
 
+
+//Messages for accounting basic methods handling
 message CreateEmployeeRequest{
     string companyId  = 1;
     Employee employee = 2;
@@ -76,6 +96,11 @@ message DeleteBusinessHourRequest{
     AccountingIntegrationType appType =3;
 }
 
+message CreateStaffAppointmentRequest{
+    string CompanyID = 1;
+    PrepaidAppointment StaffAppointment = 2;
+}
+
 message CreatePrepaidAppointmentRequest{
    string companyId = 1;
    PrepaidAppointment prepaidAppointment = 2;
@@ -84,6 +109,92 @@ message CreatePrepaidAppointmentRequest{
 message CancelNRefPrepaidAppointmentRequest{
      string companyId = 1;
      PrepaidAppointment prepaidAppointment = 2;
+}
+
+message UpdatePrepaidAppointmentRequest{
+      string companyId = 1;
+     PrepaidAppointment prepaidAppointment = 2;
+}
+
+message NoShowPrepaidAppointmentRequest{
+    string CompanyId = 1;
+    PrepaidAppointment PrepaidAppointment = 2;
+}
+
+message CreatePartpaidAppointmentRequest{
+    string CompanyId = 1;
+    PartpaidAppointment PartpaidAppointment = 2;    
+}
+
+message CancelNRefPartpaidAppointmentRequest{
+    string CompanyId = 1;
+    PartpaidAppointment PartpaidAppointment = 2;
+}
+
+message UpdatePartpaidAppointmentRequest{
+    string CompanyId = 1;
+    PartpaidAppointment PartpaidAppointment = 2;
+}
+
+message NoShowPartpaidAppointmentRequest{
+   string CompanyId = 1;
+    PartpaidAppointment PartpaidAppointment = 2;
+}
+
+message CreateInventoryRequest{
+  string CompanyID = 1;
+  Inventory inventory = 2;
+  AccountingIntegrationType appType =3;
+}
+
+message RemoveInventoryRequest{
+  string CompanyId = 1;
+  Inventory inventory = 2;
+}
+
+message SaleNRemoveInventoryRequest{
+  string CompanyId = 1;
+  Inventory inventory = 2;
+}
+
+message ReturnNAddInventoryRequest{
+  string CompanyId = 1;
+  Inventory inventory = 2;
+}
+
+message SellGiftCertificateRequest{
+  string CompanyId = 1;
+  PrepaidAppointment PrepaidAppointment = 2;
+}
+
+message RedeemGiftCertificateRequest{
+  string CompanyId = 1;
+  PrepaidAppointment PrepaidAppointment = 2; 
+}
+
+message CancelGiftCertificateRequest{
+  string CompanyId = 1;
+  PrepaidAppointment PrepaidAppointment = 2; 
+}
+
+message ExpireGiftCertificateRequest{
+  string CompanyId = 1;
+  PrepaidAppointment PrepaidAppointment = 2; 
+}
+
+message CreateManualPaymentRequest{
+  string CompanyId = 1;
+  PrepaidAppointment PrepaidAppointment = 2; 
+}
+
+message RemoveManualPaymentRequest{
+  string CompanyId = 1;
+  PrepaidAppointment PrepaidAppointment = 2; 
+}
+
+message UpdateManualPaymentRequest{
+  string CompanyId = 1;
+  PrepaidAppointment PrepaidAppointment = 2; 
 }
 
 message CreateCustomerRequest{
@@ -102,10 +213,19 @@ message UpdateCustomerRequest{
     Customer customer = 2;   
 }
 
-message CreateInventoryRequest{
-  string CompanyID = 1;
-  Inventory inventory = 2;
-  AccountingIntegrationType appType =3;
+message CreateDiscountCouponEnabledSaleRequest{
+    string companyId  = 1;
+    PrepaidAppointment PrepaidAppointment = 2;
+}
+
+message RemoveDiscountCouponEnabledSaleRequest{
+    string companyId  = 1;
+    PrepaidAppointment PrepaidAppointment = 2;
+}
+
+message UpdateDiscountCouponEnabledSaleRequest{
+    string companyId  = 1;
+    PrepaidAppointment PrepaidAppointment = 2;
 }
 
 //message Account{
@@ -118,6 +238,34 @@ message CreateInventoryRequest{
 //
 //}
 
+//message for implimenting RPC for account balencing.
+//message PaymentResponse{
+    //Id of account or type of account
+  //  string id = 1;
+    //accountyId of the entity
+    //string AccountyId = 2;
+    //advanced paid or not 
+    //string PaymentStatus = 3;
+    //Account type
+    //string DepositAccType = 4;
+    //CustomerId who made the payment
+    //string CustomerId = 5;
+    // Total transaction amount 
+    //string TotalAmount = 6;
+    // Reference of the currency
+    //string CurrencyRef = 7;
+    //Customer status for transaction
+    //string CustomerStatus = 8;
+    // Synctoken for granting only one user at a time.
+    //string SyncToken = 9;
+    //Date on which payment occured.
+     //.google.protobuf.Timestamp createDate = 10;
+    // Additional data of account
+    //map<string, string> metadata = 11;
+//}
+
+
+//messages for creating objects used in rpcs
 message Employee {
     // Id of employee
     string id = 1;
@@ -175,20 +323,45 @@ message PrepaidAppointment{
     bool PaymentStatus = 3;
     //Account ID
     string DepositeAccId = 4;
+    //optional boolean for handling owners policy like giving refund or commission etc.
+    bool PolicyApplied = 5;
     //CustomerId who made the payment
-    string CustomerId = 5;
+    string CustomerId = 6;
     // Total transaction amount 
-    string TotalAmount = 6;
+    string TotalAmount = 7;
     // Reference of the currency
-    string CurrencyRef = 7;
+    string CurrencyRef = 8;
     //Customer status for transaction
-    string CustomerStatus = 8;
-    // Synctoken for granting only one user at a time.
-    string SyncToken = 9;
+    string CustomerStatus = 9;
+    //Synctoken for granting only one user at a time.
+    string SyncToken = 10;
     //Date on which payment occured.
-     .google.protobuf.Timestamp createDate = 10;
+     .google.protobuf.Timestamp createDate = 11;
     // Additional data of account
-    map<string, string> metadata = 11;
+    map<string, int64> metadata = 12;
+    // Additional data of account for string return
+    map<string, string> metadataString = 13;
+}
+
+message PartpaidAppointment{
+    //Id of account or type of account
+    string id = 1;
+    //appointy Id
+    string appointyId = 2;
+    //advanced paid or not 
+    bool PaymentStatus = 3;
+    //optional boolean for handling owners policy like giving refund or commission etc.
+    bool PolicyApplied = 4;
+    // Total transaction amount 
+    string TotalAmount = 5;
+    // Reference of the currency
+    string CurrencyRef = 6;
+    //Date on which payment occured.
+     .google.protobuf.Timestamp createDate = 7;
+    // Additional data of account
+    map<string, int64> metadata = 8;
+    // Additional data of account for string return
+    map<string, string> metadataString = 9;
 }
 
 message Customer{
@@ -223,26 +396,32 @@ message Customer{
 message Inventory{
     //object indentifier
     string Id = 1;
+    //Appointy Id of the Vendor.
+    string VendorAppointyId = 2;
     //inventory id.
-    string InventoryId = 2;
+    string InventoryId = 3;
     //name of the Item
-    string Name = 3;
+    string Name = 4;
+    //Payment done right now or create a liability.
+    bool PaymentDone = 5;
     //cost of Item
-    string ItemCost = 4;
+    string ItemCost = 6;
+    //item quantity.
+    string Qnt = 7;
     //purchase detail
-    string PurchaseDetail = 5;
+    string PurchaseDetail = 8;
     //Item description
-    string ItemDesc = 6;
+    string ItemDesc = 9;
     //Item deleted or remain in the list.
-    string ItemVisState = 7;
-    // Synctoken for granting only one user at a time.
-    string SyncToken = 8;
+    string ItemVisState = 10;
+    //If the item sold or lost
+    bool StateOfItem = 11;
     //Tax id for item.
-    string TxnId = 9;
+    string TxnId = 12;
     //Date on which date on which item Purchased.
-    .google.protobuf.Timestamp PurchaseDate = 10;
+    .google.protobuf.Timestamp PurchaseDate = 13;
     // Additional data of item.
-    map<string, string> metadata = 11;
+    map<string, string> metadata = 14;
  
 }
 
@@ -266,3 +445,5 @@ enum AccountType{
     LIABILITY =3;
     REVENUE = 4;
 }
+
+	
